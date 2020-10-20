@@ -1,0 +1,118 @@
+classdef app6 < matlab.apps.AppBase
+
+    % Properties that correspond to app components
+    properties (Access = public)
+        UIFigure   matlab.ui.Figure
+        Button     matlab.ui.control.Button
+        Button_3   matlab.ui.control.Button
+        Button_4   matlab.ui.control.Button
+        Label_2    matlab.ui.control.Label
+        EditField  matlab.ui.control.NumericEditField
+        Button_2   matlab.ui.control.Button
+    end
+
+
+    properties (Access = public)
+        b=0 % Description
+        res=0
+    end
+
+
+    methods (Access = private)
+
+        % Button pushed function: Button
+        function ButtonPushed(app, event)
+              app.EditField.Value=app.EditField.Value*10+1;
+        end
+
+        % Button pushed function: Button_3
+        function Button_3Pushed(app, event)
+            app.EditField.Value=app.EditField.Value*10+2;
+            app.b=app.EditField.Value;
+        end
+
+        % Button pushed function: Button_2
+        function Button_2Pushed(app, event)
+            %app.res=0;
+            app.res=app.res+app.EditField.Value;
+            app.EditField.Value=0;
+            
+        end
+
+        % Button pushed function: Button_4
+        function Button_4Pushed(app, event)
+            app.EditField.Value=app.res+app.b;
+        end
+    end
+
+    % App initialization and construction
+    methods (Access = private)
+
+        % Create UIFigure and components
+        function createComponents(app)
+
+            % Create UIFigure
+            app.UIFigure = uifigure;
+            app.UIFigure.Position = [100 100 640 480];
+            app.UIFigure.Name = 'UI Figure';
+
+            % Create Button
+            app.Button = uibutton(app.UIFigure, 'push');
+            app.Button.ButtonPushedFcn = createCallbackFcn(app, @ButtonPushed, true);
+            app.Button.Position = [71 408 31 22];
+            app.Button.Text = '1';
+
+            % Create Button_3
+            app.Button_3 = uibutton(app.UIFigure, 'push');
+            app.Button_3.ButtonPushedFcn = createCallbackFcn(app, @Button_3Pushed, true);
+            app.Button_3.Position = [147 408 29 22];
+            app.Button_3.Text = '2';
+
+            % Create Button_4
+            app.Button_4 = uibutton(app.UIFigure, 'push');
+            app.Button_4.ButtonPushedFcn = createCallbackFcn(app, @Button_4Pushed, true);
+            app.Button_4.Position = [183 408 26 22];
+            app.Button_4.Text = '=';
+
+            % Create Label_2
+            app.Label_2 = uilabel(app.UIFigure);
+            app.Label_2.HorizontalAlignment = 'right';
+            app.Label_2.Position = [219 408 25 22];
+            app.Label_2.Text = '';
+
+            % Create EditField
+            app.EditField = uieditfield(app.UIFigure, 'numeric');
+            app.EditField.Position = [259 408 100 22];
+
+            % Create Button_2
+            app.Button_2 = uibutton(app.UIFigure, 'push');
+            app.Button_2.ButtonPushedFcn = createCallbackFcn(app, @Button_2Pushed, true);
+            app.Button_2.Position = [112 408 27 22];
+            app.Button_2.Text = '+';
+        end
+    end
+
+    methods (Access = public)
+
+        % Construct app
+        function app = app6
+
+            % Create and configure components
+            createComponents(app)
+
+            % Register the app with App Designer
+            registerApp(app, app.UIFigure)
+
+            if nargout == 0
+                clear app
+            end
+        end
+
+        % Code that executes before app deletion
+        function delete(app)
+
+            % Delete UIFigure when app is deleted
+            delete(app.UIFigure)
+        end
+    end
+end
